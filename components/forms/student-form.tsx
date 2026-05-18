@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { Student, Room } from "@/lib/types";
 import { FACULTIES } from "@/lib/constants";
 import { getRooms } from "@/lib/storage";
@@ -74,6 +75,18 @@ export function StudentForm({
       });
     }
   }, [student, open]);
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64 = event.target?.result as string;
+        setFormData({ ...formData, photoUrl: base64 });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -245,6 +258,42 @@ export function StudentForm({
                   <SelectItem value="graduated">Bitirdi</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+              Rasm
+            </label>
+            <div className="flex gap-4">
+              <div>
+                <label className="block text-sm text-gray-600 dark:text-gray-400 mb-2">
+                  Rasmni tanlang:
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoChange}
+                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Rasm tanlangan bo'lsa, aks holda avtomatik avatar qo'yiladi
+                </p>
+              </div>
+              {formData.photoUrl && (
+                <div className="flex flex-col items-center">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    Ko'rin:
+                  </p>
+                  <Image
+                    src={formData.photoUrl}
+                    alt="Talaba rasmini oldindan ko'rin"
+                    width={80}
+                    height={80}
+                    className="w-20 h-20 rounded-md object-cover border border-gray-300 dark:border-gray-600"
+                  />
+                </div>
+              )}
             </div>
           </div>
 
