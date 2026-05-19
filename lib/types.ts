@@ -16,6 +16,7 @@ export interface AdminUser {
   username: string;
   password: string;
   fullName: string;
+  photoUrl?: string;
   createdAt: string;
 }
 

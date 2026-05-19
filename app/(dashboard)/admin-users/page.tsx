@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { AdminUser } from "@/lib/types";
 import { getAdmins, addAdmin, deleteAdmin } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ export default function AdminUsersPage() {
   const [newUsername, setNewUsername] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newFullName, setNewFullName] = useState("");
+  const [newPhotoUrl, setNewPhotoUrl] = useState("");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -46,6 +48,18 @@ export default function AdminUsersPage() {
     );
   };
 
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64 = event.target?.result as string;
+        setNewPhotoUrl(base64);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleAddAdmin = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -58,11 +72,17 @@ export default function AdminUsersPage() {
       return;
     }
 
+    let photoUrl = newPhotoUrl;
+    if (!photoUrl) {
+      photoUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${newFullName.replace(/\s+/g, "")}`;
+    }
+
     const newAdmin: AdminUser = {
       id: `admin-${Date.now()}`,
       username: newUsername,
       password: newPassword,
       fullName: newFullName,
+      photoUrl: photoUrl,
       createdAt: new Date().toISOString(),
     };
 
@@ -75,6 +95,7 @@ export default function AdminUsersPage() {
     setNewUsername("");
     setNewPassword("");
     setNewFullName("");
+    setNewPhotoUrl("");
     setOpenForm(false);
     loadAdmins();
   };
@@ -110,7 +131,16 @@ export default function AdminUsersPage() {
       <div className="space-y-3">
         {admins.map((admin) => (
           <Card key={admin.id} className="p-4">
-            <div className="flex justify-between items-start">
+            <div className="flex justify-between items-start gap-4">
+              {admin.photoUrl && (
+                <Image
+                  src={admin.photoUrl}
+                  alt={admin.fullName}
+                  width={56}
+                  height={56}
+                  className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
+                />
+              )}
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   {admin.username === MASTER_ADMIN.username && (
@@ -215,11 +245,51 @@ export default function AdminUsersPage() {
               />
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                Rasm
+              </label>
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <label className="block text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    Rasmni tanlang:
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoChange}
+                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  />
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Rasm tanlangan bo&apos;lsa, aks holda avtomatik avatar
+                    qo&apos;yiladi
+                  </p>
+                </div>
+                {newPhotoUrl && (
+                  <div className="flex flex-col items-center">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                      Ko&apos;rin:
+                    </p>
+                    <Image
+                      src={newPhotoUrl}
+                      alt="Admin rasmini oldindan ko'rin"
+                      width={80}
+                      height={80}
+                      className="w-20 h-20 rounded-lg object-cover border border-gray-300 dark:border-gray-600"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
             <DialogFooter>
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setOpenForm(false)}
+                onClick={() => {
+                  setOpenForm(false);
+                  setNewPhotoUrl("");
+                }}
               >
                 Bekor qilish
               </Button>
