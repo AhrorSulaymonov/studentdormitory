@@ -138,7 +138,7 @@ export default function AdminUsersPage() {
                   alt={admin.fullName}
                   width={56}
                   height={56}
-                  className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
+                  className="w-14 h-14 rounded-lg object-cover shrink-0"
                 />
               )}
               <div className="flex-1">

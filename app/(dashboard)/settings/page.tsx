@@ -199,12 +199,12 @@ export default function SettingsPage() {
       {/* Data Management */}
       <Card className="p-6">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          Ma\'lumotlarni boshqarish
+          Ma'lumotlarni boshqarish
         </h2>
         <div className="space-y-3">
           <div>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-              Barcha ma\'lumotlarni JSON faylga eksport qilish
+              Barcha ma'lumotlarni JSON faylga eksport qilish
             </p>
             <Button onClick={handleExport} variant="outline" className="gap-2">
               <Download className="w-4 h-4" />
@@ -214,7 +214,7 @@ export default function SettingsPage() {
 
           <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-              JSON fayldan ma\'lumotlarni import qilish
+              JSON fayldan ma'lumotlarni import qilish
             </p>
             <label>
               <input
