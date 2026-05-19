@@ -7,19 +7,30 @@ import {
   updatePayment,
   getStudents,
   getRooms,
+  addPayment,
 } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate, formatCurrency, getMonthName } from "@/lib/constants";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle, AlertCircle, Clock } from "lucide-react";
+import {
+  CheckCircle,
+  AlertCircle,
+  Clock,
+  ChevronDown,
+  ChevronUp,
+  Plus,
+} from "lucide-react";
+import { generatePaymentMonths } from "@/lib/payment-utils";
 
 export default function PaymentsPage() {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [students, setStudents] = useState<Record<string, Student>>({});
   const [rooms, setRooms] = useState<Record<string, Room>>({});
   const [activeTab, setActiveTab] = useState("all");
+  const [expandedStudent, setExpandedStudent] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"list" | "history">("list");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -63,6 +74,72 @@ export default function PaymentsPage() {
     loadData();
   };
 
+  const getStudentPaymentHistory = (studentId: string) => {
+    const student = students[studentId];
+    if (!student) return [];
+
+    const studentPayments = payments.filter((p) => p.studentId === studentId);
+    const paidMonths = studentPayments
+      .filter((p) => p.status === "paid")
+      .map((p) => p.month);
+
+    const checkInDate = student.checkInDate
+      ? new Date(student.checkInDate)
+      : new Date();
+    const checkOutDate = student.checkOutDate
+      ? new Date(student.checkOutDate)
+      : null;
+
+    return generatePaymentMonths(
+      checkInDate,
+      checkOutDate,
+      paidMonths,
+      new Date(),
+    );
+  };
+
+  const handleCreatePaymentForMonth = (
+    studentId: string,
+    year: number,
+    month: number,
+    pricePerMonth: number,
+  ) => {
+    const student = students[studentId];
+    const room = student.roomId ? rooms[student.roomId] : null;
+
+    if (!student || !room) {
+      toast({
+        variant: "destructive",
+        title: "Xato",
+        description: "Talaba yoki xona topilmadi",
+      });
+      return;
+    }
+
+    const monthKey = `${year}-${String(month).padStart(2, "0")}`;
+    const dueDay = 15; // To'lov muddati: har oyning 15-kuni
+
+    const newPayment: Payment = {
+      id: `payment-${Date.now()}`,
+      studentId,
+      roomId: room.id,
+      amount: pricePerMonth,
+      month: monthKey,
+      dueDate: new Date(year, month - 1, dueDay).toISOString(),
+      paidDate: null,
+      status: "unpaid",
+      method: null,
+      notes: "",
+    };
+
+    addPayment(newPayment);
+    toast({
+      title: "Muvaffaqiyat",
+      description: `${monthKey} oyi uchun to'lov yozuvi yaratildi`,
+    });
+    loadData();
+  };
+
   const stats = {
     total: payments.length,
     paid: payments.filter((p) => p.status === "paid").length,
@@ -80,13 +157,29 @@ export default function PaymentsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          To'lovlar
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
-          Jami to'lovlar: {stats.total}
-        </p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            To'lovlar
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-2">
+            Jami to'lovlar: {stats.total}
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant={viewMode === "list" ? "default" : "outline"}
+            onClick={() => setViewMode("list")}
+          >
+            Ro'yxat
+          </Button>
+          <Button
+            variant={viewMode === "history" ? "default" : "outline"}
+            onClick={() => setViewMode("history")}
+          >
+            Talaba tarixi
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -116,84 +209,237 @@ export default function PaymentsPage() {
         </Card>
       </div>
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="all">Hammasini ({stats.total})</TabsTrigger>
-          <TabsTrigger value="paid">To'landi ({stats.paid})</TabsTrigger>
-          <TabsTrigger value="unpaid">To'lanmadi ({stats.unpaid})</TabsTrigger>
-          <TabsTrigger value="overdue">
-            Muddati o'tgan ({stats.overdue})
-          </TabsTrigger>
-        </TabsList>
+      {/* View Mode Content */}
+      {viewMode === "list" && (
+        <>
+          {/* Tabs */}
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList>
+              <TabsTrigger value="all">Hammasini ({stats.total})</TabsTrigger>
+              <TabsTrigger value="paid">To'landi ({stats.paid})</TabsTrigger>
+              <TabsTrigger value="unpaid">
+                To'lanmadi ({stats.unpaid})
+              </TabsTrigger>
+              <TabsTrigger value="overdue">
+                Muddati o'tgan ({stats.overdue})
+              </TabsTrigger>
+            </TabsList>
 
-        <TabsContent value={activeTab} className="space-y-4">
-          {filteredPayments.length > 0 ? (
-            <div className="space-y-3">
-              {filteredPayments.map((payment) => {
-                const student = students[payment.studentId];
-                const room = rooms[payment.roomId];
-                const statusIcon = {
-                  paid: <CheckCircle className="w-5 h-5 text-green-600" />,
-                  unpaid: <Clock className="w-5 h-5 text-yellow-600" />,
-                  partial: <Clock className="w-5 h-5 text-yellow-600" />,
-                  overdue: <AlertCircle className="w-5 h-5 text-red-600" />,
-                }[payment.status];
+            <TabsContent value={activeTab} className="space-y-4">
+              {filteredPayments.length > 0 ? (
+                <div className="space-y-3">
+                  {filteredPayments.map((payment) => {
+                    const student = students[payment.studentId];
+                    const room = rooms[payment.roomId];
+                    const statusIcon = {
+                      paid: <CheckCircle className="w-5 h-5 text-green-600" />,
+                      unpaid: <Clock className="w-5 h-5 text-yellow-600" />,
+                      partial: <Clock className="w-5 h-5 text-yellow-600" />,
+                      overdue: <AlertCircle className="w-5 h-5 text-red-600" />,
+                    }[payment.status];
 
-                return (
-                  <Card key={payment.id} className="p-4">
-                    <div className="flex justify-between items-start">
-                      <div className="flex gap-3 flex-1">
-                        <div>{statusIcon}</div>
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900 dark:text-white">
-                            {student?.fullName}
-                          </h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            {getMonthName(
-                              `${payment.month.split("-")[0]}-${payment.month.split("-")[1]}`,
-                            )}{" "}
-                            - {room ? `Xona ${room.number}` : "No room"}
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                            Muddati: {formatDate(payment.dueDate)}
-                            {payment.paidDate &&
-                              ` • To'langan: ${formatDate(payment.paidDate)}`}
-                          </p>
+                    return (
+                      <Card key={payment.id} className="p-4">
+                        <div className="flex justify-between items-start">
+                          <div className="flex gap-3 flex-1">
+                            <div>{statusIcon}</div>
+                            <div className="flex-1">
+                              <h3 className="font-semibold text-gray-900 dark:text-white">
+                                {student?.fullName}
+                              </h3>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                {getMonthName(
+                                  `${payment.month.split("-")[0]}-${payment.month.split("-")[1]}`,
+                                )}{" "}
+                                - {room ? `Xona ${room.number}` : "No room"}
+                              </p>
+                              <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                                Muddati: {formatDate(payment.dueDate)}
+                                {payment.paidDate &&
+                                  ` • To'langan: ${formatDate(payment.paidDate)}`}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-lg font-bold text-gray-900 dark:text-white">
+                              {formatCurrency(payment.amount)}
+                            </p>
+                            <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                              {payment.method && `Usul: ${payment.method}`}
+                            </p>
+                            {payment.status !== "paid" && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="mt-2"
+                                onClick={() => handleMarkAsPaid(payment)}
+                              >
+                                To'langan deb belgilash
+                              </Button>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-lg font-bold text-gray-900 dark:text-white">
-                          {formatCurrency(payment.amount)}
-                        </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                          {payment.method && `Usul: ${payment.method}`}
-                        </p>
-                        {payment.status !== "paid" && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="mt-2"
-                            onClick={() => handleMarkAsPaid(payment)}
-                          >
-                            To'langan deb belgilash
-                          </Button>
-                        )}
-                      </div>
+                      </Card>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-gray-600 dark:text-gray-400">
+                    Bu toifada to'lovlar yo'q
+                  </p>
+                </div>
+              )}
+            </TabsContent>
+          </Tabs>
+        </>
+      )}
+
+      {/* History View */}
+      {viewMode === "history" && (
+        <div className="space-y-4">
+          <div className="space-y-3">
+            {Object.values(students).map((student) => {
+              const paymentHistory = getStudentPaymentHistory(student.id);
+              const room = student.roomId ? rooms[student.roomId] : null;
+              const isExpanded = expandedStudent === student.id;
+
+              return (
+                <Card key={student.id} className="overflow-hidden">
+                  <div
+                    className="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 flex justify-between items-center"
+                    onClick={() =>
+                      setExpandedStudent(isExpanded ? null : student.id)
+                    }
+                  >
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900 dark:text-white">
+                        {student.fullName}
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {room ? `Xona ${room.number}` : "Xonasi yo'q"} •{" "}
+                        {
+                          paymentHistory.filter((p) => p.status === "paid")
+                            .length
+                        }{" "}
+                        /{paymentHistory.length} to'langan
+                      </p>
                     </div>
-                  </Card>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-600 dark:text-gray-400">
-                Bu toifada to'lovlar yo'q
-              </p>
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+                    {isExpanded ? (
+                      <ChevronUp className="w-5 h-5 text-gray-400" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-gray-400" />
+                    )}
+                  </div>
+
+                  {isExpanded && (
+                    <div className="border-t border-gray-200 dark:border-gray-800 p-4 space-y-2">
+                      {paymentHistory.length > 0 ? (
+                        <>
+                          {paymentHistory.map((month) => {
+                            const existingPayment = payments.find(
+                              (p) =>
+                                p.studentId === student.id &&
+                                p.month ===
+                                  `${month.year}-${String(month.month).padStart(2, "0")}`,
+                            );
+
+                            const statusColor = {
+                              paid: "bg-green-50 dark:bg-green-900 border-green-200 dark:border-green-700",
+                              unpaid:
+                                "bg-yellow-50 dark:bg-yellow-900 border-yellow-200 dark:border-yellow-700",
+                              upcoming:
+                                "bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700",
+                            }[month.status];
+
+                            const statusIcon = {
+                              paid: (
+                                <CheckCircle className="w-4 h-4 text-green-600" />
+                              ),
+                              unpaid: (
+                                <Clock className="w-4 h-4 text-yellow-600" />
+                              ),
+                              upcoming: (
+                                <Clock className="w-4 h-4 text-gray-400" />
+                              ),
+                            }[month.status];
+
+                            return (
+                              <div
+                                key={`${month.year}-${month.month}`}
+                                className={`flex justify-between items-center p-2 border rounded ${statusColor}`}
+                              >
+                                <div className="flex items-center gap-2 flex-1">
+                                  {statusIcon}
+                                  <span className="text-sm font-medium">
+                                    {month.label}
+                                  </span>
+                                  {month.isCurrent && (
+                                    <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-100 px-2 py-0.5 rounded">
+                                      Joriy
+                                    </span>
+                                  )}
+                                  {month.isCheckoutMonth && (
+                                    <span className="text-xs bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-100 px-2 py-0.5 rounded">
+                                      Chiqish
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="flex gap-1">
+                                  {existingPayment ? (
+                                    <>
+                                      <span className="text-xs text-gray-600 dark:text-gray-400">
+                                        {formatCurrency(existingPayment.amount)}
+                                      </span>
+                                      {existingPayment.status !== "paid" && (
+                                        <Button
+                                          size="sm"
+                                          variant="ghost"
+                                          className="h-6 px-2 text-xs"
+                                          onClick={() =>
+                                            handleMarkAsPaid(existingPayment)
+                                          }
+                                        >
+                                          To'lash
+                                        </Button>
+                                      )}
+                                    </>
+                                  ) : month.status !== "upcoming" ? (
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="h-6 px-2 text-xs gap-1"
+                                      onClick={() =>
+                                        handleCreatePaymentForMonth(
+                                          student.id,
+                                          month.year,
+                                          month.month,
+                                          room?.pricePerMonth || 0,
+                                        )
+                                      }
+                                    >
+                                      <Plus className="w-3 h-3" />
+                                      Yaratish
+                                    </Button>
+                                  ) : null}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </>
+                      ) : (
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          Bu talaba uchun to'lov tarixi mavjud emas
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
