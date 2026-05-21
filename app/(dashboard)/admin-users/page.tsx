@@ -147,13 +147,13 @@ export default function AdminUsersPage() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   {admin.username === MASTER_ADMIN.username && (
-                    <Shield className="w-4 h-4 md:w-5 md:h-5 text-yellow-600 flex-shrink-0" />
+                    <Shield className="w-4 h-4 md:w-5 md:h-5 text-yellow-600 shrink-0" />
                   )}
                   <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white truncate">
                     {admin.fullName}
                   </h3>
                   {admin.username === MASTER_ADMIN.username && (
-                    <span className="px-2 py-1 text-xs bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-100 rounded flex-shrink-0">
+                    <span className="px-2 py-1 text-xs bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-100 rounded hrink-0">
                       Master admin
                     </span>
                   )}
@@ -178,7 +178,7 @@ export default function AdminUsersPage() {
                   <Button
                     size="sm"
                     variant="outline"
-                    className="text-red-600 hover:bg-red-50 dark:hover:bg-red-900 flex-shrink-0"
+                    className="text-red-600 hover:bg-red-50 dark:hover:bg-red-900 shrink-0"
                     onClick={() => setDeleteId(admin.id)}
                   >
                     <Trash2 className="w-3 h-3 md:w-4 md:h-4" />

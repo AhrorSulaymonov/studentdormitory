@@ -268,9 +268,7 @@ export default function PaymentsPage() {
                       <Card key={payment.id} className="p-2 md:p-4">
                         <div className="flex justify-between items-start gap-2 md:gap-3">
                           <div className="flex gap-2 md:gap-3 flex-1 min-w-0">
-                            <div className="flex-shrink-0 mt-1">
-                              {statusIcon}
-                            </div>
+                            <div className="shrink-0 mt-1">{statusIcon}</div>
                             <div className="flex-1 min-w-0">
                               <h3 className="text-sm md:text-base font-semibold text-gray-900 dark:text-white truncate">
                                 {student?.fullName}
@@ -288,7 +286,7 @@ export default function PaymentsPage() {
                               </p>
                             </div>
                           </div>
-                          <div className="text-right flex-shrink-0">
+                          <div className="text-right shrink-0">
                             <p className="text-base md:text-lg font-bold text-gray-900 dark:text-white">
                               {formatCurrency(payment.amount)}
                             </p>

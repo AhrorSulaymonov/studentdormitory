@@ -206,7 +206,7 @@ function StatsCard({ title, value, icon: Icon, color }: StatsCardProps) {
             {value}
           </p>
         </div>
-        <div className={`p-2 sm:p-3 rounded-lg flex-shrink-0 ${color}`}>
+        <div className={`p-2 sm:p-3 rounded-lg shrink-0 ${color}`}>
           <Icon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
         </div>
       </div>

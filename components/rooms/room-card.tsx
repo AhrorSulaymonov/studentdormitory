@@ -37,7 +37,7 @@ export function RoomCard({ room, onEdit, onDelete }: RoomCardProps) {
           </p>
         </div>
         <span
-          className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium flex-shrink-0 ${STATUS_COLORS[room.status]}`}
+          className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium shrink-0 ${STATUS_COLORS[room.status]}`}
         >
           {statusLabel}
         </span>

@@ -249,7 +249,7 @@ export default function RoomAllocationPage() {
                           </span>
                           <button
                             onClick={() => handleRemoveStudent(student.id)}
-                            className="text-red-600 hover:text-red-700 flex-shrink-0 ml-2"
+                            className="text-red-600 hover:text-red-700 shrink-0 ml-2"
                           >
                             <X className="w-3 h-3 md:w-4 md:h-4" />
                           </button>

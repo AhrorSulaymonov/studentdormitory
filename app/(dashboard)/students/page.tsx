@@ -161,7 +161,7 @@ export default function StudentsPage() {
                         </p>
                       </div>
                       <span
-                        className={`px-2 py-1 text-xs font-medium rounded-full flex-shrink-0 whitespace-nowrap ${
+                        className={`px-2 py-1 text-xs font-medium rounded-full shrink-0 whitespace-nowrap ${
                           student.status === "active"
                             ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-100"
                             : "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-100"
@@ -182,11 +182,11 @@ export default function StudentsPage() {
                       )}
                       <div className="flex flex-wrap gap-1 md:gap-3 text-xs text-gray-600 dark:text-gray-400">
                         <span className="flex items-center gap-1 truncate">
-                          <Phone className="w-3 h-3 flex-shrink-0" />
+                          <Phone className="w-3 h-3 shrink-0" />
                           <span className="truncate">{student.phone}</span>
                         </span>
                         <span className="flex items-center gap-1 truncate">
-                          <Mail className="w-3 h-3 flex-shrink-0" />
+                          <Mail className="w-3 h-3 shrink-0" />
                           <span className="truncate">{student.email}</span>
                         </span>
                       </div>
