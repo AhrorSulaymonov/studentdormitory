@@ -59,19 +59,19 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
           Bosh sahifa
         </h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
+        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1 md:mt-2">
           Turar joy boshqaruv tizimiga xush kelibsiz
         </p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
         <StatsCard
           title="Jami xonalar"
           value={stats.totalRooms}
@@ -98,14 +98,14 @@ export default function DashboardPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Occupancy Chart */}
         <div className="lg:col-span-2">
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <Card className="p-3 sm:p-4 md:p-6">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 md:mb-4">
               Xona occupancy
             </h3>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={250}>
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
@@ -118,32 +118,32 @@ export default function DashboardPage() {
         </div>
 
         {/* Payment Stats */}
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        <Card className="p-3 sm:p-4 md:p-6">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 md:mb-4">
             To'lovlar
           </h3>
-          <div className="space-y-3">
+          <div className="space-y-2 md:space-y-3">
             <div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                 Jami to'lovlar
               </p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 {stats.totalPayments}
               </p>
             </div>
             <div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                 To'lanmagan
               </p>
-              <p className="text-2xl font-bold text-red-600">
+              <p className="text-xl sm:text-2xl font-bold text-red-600">
                 {stats.unpaidPayments}
               </p>
             </div>
             <div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                 Jami daromad
               </p>
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-xl sm:text-2xl font-bold text-green-600">
                 {formatCurrency(stats.totalRevenue)}
               </p>
             </div>
@@ -153,11 +153,11 @@ export default function DashboardPage() {
 
       {/* Overdue Alerts */}
       {overduPayments.length > 0 && (
-        <Card className="p-6 border-l-4 border-red-500">
-          <div className="flex items-start gap-4">
-            <AlertCircle className="w-6 h-6 text-red-600 shrink-0 mt-1" />
-            <div className="flex-1">
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-3">
+        <Card className="p-3 sm:p-4 md:p-6 border-l-4 border-red-500">
+          <div className="flex items-start gap-3 md:gap-4">
+            <AlertCircle className="w-5 h-5 sm:w-6 sm:h-6 text-red-600 shrink-0 mt-1" />
+            <div className="flex-1 min-w-0">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2 md:mb-3">
                 Muddati o'tgan to'lovlar ({overduPayments.length})
               </h3>
               <div className="space-y-2 max-h-48 overflow-y-auto">
@@ -166,12 +166,12 @@ export default function DashboardPage() {
                   return (
                     <div
                       key={payment.id}
-                      className="text-sm text-gray-600 dark:text-gray-400"
+                      className="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
                     >
-                      <p className="font-medium text-gray-900 dark:text-white">
+                      <p className="font-medium text-gray-900 dark:text-white truncate">
                         {student?.fullName}
                       </p>
-                      <p>
+                      <p className="truncate">
                         {formatCurrency(payment.amount)} - muddati:{" "}
                         {formatDate(payment.dueDate)}
                       </p>
@@ -196,16 +196,18 @@ interface StatsCardProps {
 
 function StatsCard({ title, value, icon: Icon, color }: StatsCardProps) {
   return (
-    <Card className="p-6">
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-gray-600 dark:text-gray-400 text-sm">{title}</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">
+    <Card className="p-2 sm:p-3 md:p-4 lg:p-6">
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">
+            {title}
+          </p>
+          <p className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mt-1">
             {value}
           </p>
         </div>
-        <div className={`p-3 rounded-lg ${color}`}>
-          <Icon className="w-6 h-6" />
+        <div className={`p-2 sm:p-3 rounded-lg flex-shrink-0 ${color}`}>
+          <Icon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
         </div>
       </div>
     </Card>

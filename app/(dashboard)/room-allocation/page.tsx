@@ -103,24 +103,24 @@ export default function RoomAllocationPage() {
   const unassignedStudents = getUnassignedStudents();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
           Xona joylashtirish
         </h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
+        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1 md:mt-2">
           Talabalarni xonalarga joylashtirish
         </p>
       </div>
 
       {/* Filters */}
-      <div className="flex gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+        <div className="flex-1">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Bino
           </label>
           <Select value={selectedBuilding} onValueChange={setSelectedBuilding}>
-            <SelectTrigger className="w-32">
+            <SelectTrigger className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -132,15 +132,15 @@ export default function RoomAllocationPage() {
             </SelectContent>
           </Select>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <div className="flex-1">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Qavat
           </label>
           <Select
             value={selectedFloor.toString()}
             onValueChange={(v) => setSelectedFloor(parseInt(v))}
           >
-            <SelectTrigger className="w-32">
+            <SelectTrigger className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -154,13 +154,13 @@ export default function RoomAllocationPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-6">
         {/* Floor Plan */}
-        <div className="lg:col-span-2 space-y-4">
-          <h2 className="font-semibold text-gray-900 dark:text-white">
+        <div className="lg:col-span-2 space-y-3 md:space-y-4">
+          <h2 className="text-sm md:text-base font-semibold text-gray-900 dark:text-white">
             {selectedBuilding} - bino, {selectedFloor}-qavat
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
             {roomsInLocation.length > 0 ? (
               roomsInLocation.map((room) => {
                 const occupants = getOccupants(room.id);
@@ -170,7 +170,7 @@ export default function RoomAllocationPage() {
                 return (
                   <Card
                     key={room.id}
-                    className={`p-4 cursor-pointer transition-all ${
+                    className={`p-2 md:p-4 cursor-pointer transition-all text-center ${
                       isSelected ? "ring-2 ring-blue-500" : "hover:shadow-md"
                     } ${
                       isFull
@@ -181,19 +181,17 @@ export default function RoomAllocationPage() {
                     }`}
                     onClick={() => setSelectedRoom(room)}
                   >
-                    <div className="text-center">
-                      <h3 className="font-bold text-gray-900 dark:text-white">
-                        Xona {room.number}
-                      </h3>
-                      <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
-                        {occupants.length}/{room.capacity} o&apos;rin
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {room.type === "single" && "Bitta o'rinli"}
-                        {room.type === "double" && "Ikki o'rinli"}
-                        {room.type === "triple" && "Uch o'rinli"}
-                      </p>
-                    </div>
+                    <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-white">
+                      Xona {room.number}
+                    </h3>
+                    <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
+                      {occupants.length}/{room.capacity} o&apos;rin
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      {room.type === "single" && "Bitta o'rinli"}
+                      {room.type === "double" && "Ikki o'rinli"}
+                      {room.type === "triple" && "Uch o'rinli"}
+                    </p>
                   </Card>
                 );
               })
@@ -208,19 +206,19 @@ export default function RoomAllocationPage() {
         </div>
 
         {/* Room Details & Assign */}
-        <Card className="p-6 h-fit">
+        <Card className="p-3 md:p-6 h-fit">
           {selectedRoom ? (
             <>
-              <h3 className="font-bold text-gray-900 dark:text-white mb-4">
+              <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                 Xona {selectedRoom.number} - Batafsil
               </h3>
 
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 <div>
                   <p className="text-xs text-gray-600 dark:text-gray-400">
                     Sig&apos;imi
                   </p>
-                  <p className="font-medium text-gray-900 dark:text-white">
+                  <p className="text-sm md:text-base font-medium text-gray-900 dark:text-white">
                     {selectedRoom.capacity} o&apos;rin
                   </p>
                 </div>
@@ -228,32 +226,32 @@ export default function RoomAllocationPage() {
                   <p className="text-xs text-gray-600 dark:text-gray-400">
                     Holati
                   </p>
-                  <p className="font-medium text-gray-900 dark:text-white">
+                  <p className="text-sm md:text-base font-medium text-gray-900 dark:text-white">
                     {selectedRoom.status === "available" && "Mavjud"}
                     {selectedRoom.status === "occupied" && "Band"}
                     {selectedRoom.status === "maintenance" && "Remontda"}
                   </p>
                 </div>
 
-                <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white mb-3">
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-3 md:pt-4">
+                  <p className="text-xs md:text-sm font-medium text-gray-900 dark:text-white mb-2 md:mb-3">
                     Joylashtiriliganlar ({getOccupants(selectedRoom.id).length})
                   </p>
                   {getOccupants(selectedRoom.id).length > 0 ? (
-                    <div className="space-y-2 max-h-40 overflow-y-auto">
+                    <div className="space-y-1 md:space-y-2 max-h-40 overflow-y-auto">
                       {getOccupants(selectedRoom.id).map((student) => (
                         <div
                           key={student.id}
                           className="flex justify-between items-center text-xs bg-gray-100 dark:bg-gray-800 p-2 rounded"
                         >
-                          <span className="text-gray-900 dark:text-white">
+                          <span className="text-gray-900 dark:text-white truncate">
                             {student.fullName}
                           </span>
                           <button
                             onClick={() => handleRemoveStudent(student.id)}
-                            className="text-red-600 hover:text-red-700"
+                            className="text-red-600 hover:text-red-700 flex-shrink-0 ml-2"
                           >
-                            <X className="w-4 h-4" />
+                            <X className="w-3 h-3 md:w-4 md:h-4" />
                           </button>
                         </div>
                       ))}
@@ -267,12 +265,12 @@ export default function RoomAllocationPage() {
 
                 {getOccupants(selectedRoom.id).length <
                   selectedRoom.capacity && (
-                  <div className="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-2">
+                  <div className="border-t border-gray-200 dark:border-gray-700 pt-3 md:pt-4 space-y-2 md:space-y-3">
                     <Select
                       value={selectedStudent}
                       onValueChange={setSelectedStudent}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="text-xs md:text-sm">
                         <SelectValue placeholder="Talaba tanlang" />
                       </SelectTrigger>
                       <SelectContent>
@@ -285,7 +283,7 @@ export default function RoomAllocationPage() {
                     </Select>
                     <Button
                       onClick={() => handleAssignStudent(selectedRoom.id)}
-                      className="w-full"
+                      className="w-full text-xs md:text-sm"
                       disabled={!selectedStudent}
                     >
                       Joylashtirish
@@ -295,7 +293,7 @@ export default function RoomAllocationPage() {
               </div>
             </>
           ) : (
-            <div className="text-center text-gray-600 dark:text-gray-400">
+            <div className="text-center text-xs md:text-sm text-gray-600 dark:text-gray-400">
               <p>Xona tanlang</p>
             </div>
           )}

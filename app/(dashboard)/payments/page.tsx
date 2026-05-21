@@ -156,26 +156,28 @@ export default function PaymentsPage() {
   const filteredPayments = getFilteredPayments();
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-start">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 md:gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
             To'lovlar
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1 md:mt-2">
             Jami to'lovlar: {stats.total}
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap sm:flex-nowrap">
           <Button
             variant={viewMode === "list" ? "default" : "outline"}
             onClick={() => setViewMode("list")}
+            className="text-xs sm:text-sm"
           >
             Ro'yxat
           </Button>
           <Button
             variant={viewMode === "history" ? "default" : "outline"}
             onClick={() => setViewMode("history")}
+            className="text-xs sm:text-sm"
           >
             Talaba tarixi
           </Button>
@@ -183,27 +185,39 @@ export default function PaymentsPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-4">
-          <p className="text-gray-600 dark:text-gray-400 text-sm">To'landi</p>
-          <p className="text-2xl font-bold text-green-600">{stats.paid}</p>
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
+        <Card className="p-2 sm:p-3 md:p-4">
+          <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+            To'landi
+          </p>
+          <p className="text-lg md:text-2xl font-bold text-green-600">
+            {stats.paid}
+          </p>
           <p className="text-xs text-gray-500 mt-1">
             {formatCurrency(stats.paidAmount)}
           </p>
         </Card>
-        <Card className="p-4">
-          <p className="text-gray-600 dark:text-gray-400 text-sm">To'lanmadi</p>
-          <p className="text-2xl font-bold text-yellow-600">{stats.unpaid}</p>
+        <Card className="p-2 sm:p-3 md:p-4">
+          <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+            To'lanmadi
+          </p>
+          <p className="text-lg md:text-2xl font-bold text-yellow-600">
+            {stats.unpaid}
+          </p>
         </Card>
-        <Card className="p-4">
-          <p className="text-gray-600 dark:text-gray-400 text-sm">
+        <Card className="p-2 sm:p-3 md:p-4">
+          <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
             Muddati o'tgan
           </p>
-          <p className="text-2xl font-bold text-red-600">{stats.overdue}</p>
+          <p className="text-lg md:text-2xl font-bold text-red-600">
+            {stats.overdue}
+          </p>
         </Card>
-        <Card className="p-4">
-          <p className="text-gray-600 dark:text-gray-400 text-sm">Jami summa</p>
-          <p className="text-2xl font-bold text-blue-600">
+        <Card className="p-2 sm:p-3 md:p-4">
+          <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+            Jami summa
+          </p>
+          <p className="text-lg md:text-2xl font-bold text-blue-600">
             {formatCurrency(stats.totalAmount)}
           </p>
         </Card>
@@ -214,54 +228,68 @@ export default function PaymentsPage() {
         <>
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList>
-              <TabsTrigger value="all">Hammasini ({stats.total})</TabsTrigger>
-              <TabsTrigger value="paid">To'landi ({stats.paid})</TabsTrigger>
-              <TabsTrigger value="unpaid">
+            <TabsList className="w-full flex flex-wrap gap-1 h-auto bg-transparent p-0">
+              <TabsTrigger value="all" className="text-xs md:text-sm">
+                Hammasini ({stats.total})
+              </TabsTrigger>
+              <TabsTrigger value="paid" className="text-xs md:text-sm">
+                To'landi ({stats.paid})
+              </TabsTrigger>
+              <TabsTrigger value="unpaid" className="text-xs md:text-sm">
                 To'lanmadi ({stats.unpaid})
               </TabsTrigger>
-              <TabsTrigger value="overdue">
+              <TabsTrigger value="overdue" className="text-xs md:text-sm">
                 Muddati o'tgan ({stats.overdue})
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value={activeTab} className="space-y-4">
+            <TabsContent value={activeTab} className="space-y-2 md:space-y-3">
               {filteredPayments.length > 0 ? (
-                <div className="space-y-3">
+                <div className="space-y-2 md:space-y-3">
                   {filteredPayments.map((payment) => {
                     const student = students[payment.studentId];
                     const room = rooms[payment.roomId];
                     const statusIcon = {
-                      paid: <CheckCircle className="w-5 h-5 text-green-600" />,
-                      unpaid: <Clock className="w-5 h-5 text-yellow-600" />,
-                      partial: <Clock className="w-5 h-5 text-yellow-600" />,
-                      overdue: <AlertCircle className="w-5 h-5 text-red-600" />,
+                      paid: (
+                        <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
+                      ),
+                      unpaid: (
+                        <Clock className="w-4 h-4 md:w-5 md:h-5 text-yellow-600" />
+                      ),
+                      partial: (
+                        <Clock className="w-4 h-4 md:w-5 md:h-5 text-yellow-600" />
+                      ),
+                      overdue: (
+                        <AlertCircle className="w-4 h-4 md:w-5 md:h-5 text-red-600" />
+                      ),
                     }[payment.status];
 
                     return (
-                      <Card key={payment.id} className="p-4">
-                        <div className="flex justify-between items-start">
-                          <div className="flex gap-3 flex-1">
-                            <div>{statusIcon}</div>
-                            <div className="flex-1">
-                              <h3 className="font-semibold text-gray-900 dark:text-white">
+                      <Card key={payment.id} className="p-2 md:p-4">
+                        <div className="flex justify-between items-start gap-2 md:gap-3">
+                          <div className="flex gap-2 md:gap-3 flex-1 min-w-0">
+                            <div className="flex-shrink-0 mt-1">
+                              {statusIcon}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-sm md:text-base font-semibold text-gray-900 dark:text-white truncate">
                                 {student?.fullName}
                               </h3>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                              <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 truncate">
                                 {getMonthName(
                                   `${payment.month.split("-")[0]}-${payment.month.split("-")[1]}`,
                                 )}{" "}
                                 - {room ? `Xona ${room.number}` : "No room"}
                               </p>
-                              <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                              <p className="text-xs text-gray-500 dark:text-gray-500 mt-1 truncate">
                                 Muddati: {formatDate(payment.dueDate)}
                                 {payment.paidDate &&
                                   ` • To'langan: ${formatDate(payment.paidDate)}`}
                               </p>
                             </div>
                           </div>
-                          <div className="text-right">
-                            <p className="text-lg font-bold text-gray-900 dark:text-white">
+                          <div className="text-right flex-shrink-0">
+                            <p className="text-base md:text-lg font-bold text-gray-900 dark:text-white">
                               {formatCurrency(payment.amount)}
                             </p>
                             <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
@@ -271,7 +299,7 @@ export default function PaymentsPage() {
                               <Button
                                 size="sm"
                                 variant="outline"
-                                className="mt-2"
+                                className="mt-1 md:mt-2 text-xs"
                                 onClick={() => handleMarkAsPaid(payment)}
                               >
                                 To'langan deb belgilash
@@ -284,8 +312,8 @@ export default function PaymentsPage() {
                   })}
                 </div>
               ) : (
-                <div className="text-center py-12">
-                  <p className="text-gray-600 dark:text-gray-400">
+                <div className="text-center py-8 md:py-12">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
                     Bu toifada to'lovlar yo'q
                   </p>
                 </div>
@@ -297,7 +325,7 @@ export default function PaymentsPage() {
 
       {/* History View */}
       {viewMode === "history" && (
-        <div className="space-y-4">
+        <div className="space-y-2 md:space-y-3">
           <div className="space-y-3">
             {Object.values(students).map((student) => {
               const paymentHistory = getStudentPaymentHistory(student.id);

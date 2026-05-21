@@ -97,17 +97,17 @@ export default function StudentsPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-start">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 md:gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
             Talabalar
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1 md:mt-2">
             Jami talabalar: {students.length}
           </p>
         </div>
-        <Button onClick={handleAddStudent} className="gap-2">
+        <Button onClick={handleAddStudent} className="gap-2 w-full sm:w-auto">
           <Plus className="w-4 h-4" />
           Yangi talaba
         </Button>
@@ -120,13 +120,13 @@ export default function StudentsPage() {
           placeholder="Ism yoki talaba ID bo'yicha qidirish..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-10"
+          className="pl-10 text-sm"
         />
       </div>
 
       {/* Student Cards */}
       {filteredStudents.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
           {filteredStudents.map((student) => {
             const room = getRoom(student.roomId);
             const statusLabel = {
@@ -136,32 +136,32 @@ export default function StudentsPage() {
             }[student.status];
 
             return (
-              <Card key={student.id} className="p-4">
-                <div className="flex gap-4">
+              <Card key={student.id} className="p-3 md:p-4">
+                <div className="flex gap-2 md:gap-4">
                   <div className="shrink-0">
                     <Image
                       src={student.photoUrl}
                       alt={student.fullName}
                       width={64}
                       height={64}
-                      className="w-16 h-16 rounded-lg object-cover"
+                      className="w-12 h-12 md:w-16 md:h-16 rounded-lg object-cover"
                     />
                   </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-semibold text-gray-900 dark:text-white">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start gap-2">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white truncate">
                           {student.fullName}
                         </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                        <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 truncate">
                           {student.studentId}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1 truncate">
                           {student.faculty} - {student.year}-kurs
                         </p>
                       </div>
                       <span
-                        className={`px-2 py-1 text-xs font-medium rounded-full ${
+                        className={`px-2 py-1 text-xs font-medium rounded-full flex-shrink-0 whitespace-nowrap ${
                           student.status === "active"
                             ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-100"
                             : "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-100"
@@ -171,32 +171,32 @@ export default function StudentsPage() {
                       </span>
                     </div>
 
-                    <div className="mt-3 space-y-1">
+                    <div className="mt-2 md:mt-3 space-y-1">
                       {room && (
-                        <p className="text-xs text-gray-600 dark:text-gray-400">
+                        <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
                           Xona:{" "}
                           <span className="font-medium">
                             Xona {room.number} ({room.building})
                           </span>
                         </p>
                       )}
-                      <div className="flex gap-3 text-xs text-gray-600 dark:text-gray-400">
-                        <span className="flex items-center gap-1">
-                          <Phone className="w-3 h-3" />
-                          {student.phone}
+                      <div className="flex flex-wrap gap-1 md:gap-3 text-xs text-gray-600 dark:text-gray-400">
+                        <span className="flex items-center gap-1 truncate">
+                          <Phone className="w-3 h-3 flex-shrink-0" />
+                          <span className="truncate">{student.phone}</span>
                         </span>
-                        <span className="flex items-center gap-1">
-                          <Mail className="w-3 h-3" />
-                          {student.email}
+                        <span className="flex items-center gap-1 truncate">
+                          <Mail className="w-3 h-3 flex-shrink-0" />
+                          <span className="truncate">{student.email}</span>
                         </span>
                       </div>
                     </div>
 
-                    <div className="mt-3 flex gap-2">
+                    <div className="mt-2 md:mt-3 flex gap-2">
                       <Button
                         size="sm"
                         variant="outline"
-                        className="gap-1"
+                        className="gap-1 text-xs"
                         onClick={() => handleEditStudent(student)}
                       >
                         <Edit2 className="w-3 h-3" />

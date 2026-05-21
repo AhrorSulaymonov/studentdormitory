@@ -85,17 +85,17 @@ export default function RoomsPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-start">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 md:gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
             Xonalar
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1 md:mt-2">
             Jami xonalar: {rooms.length}
           </p>
         </div>
-        <Button onClick={handleAddRoom} className="gap-2">
+        <Button onClick={handleAddRoom} className="gap-2 w-full sm:w-auto">
           <Plus className="w-4 h-4" />
           Yangi xona
         </Button>
@@ -108,13 +108,13 @@ export default function RoomsPage() {
           placeholder="Xona raqami yoki binosi bo'yicha qidirish..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-10"
+          className="pl-10 text-sm"
         />
       </div>
 
       {/* Room Grid */}
       {filteredRooms.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           {filteredRooms.map((room) => (
             <AlertDialog
               key={room.id}

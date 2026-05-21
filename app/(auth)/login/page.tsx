@@ -35,19 +35,21 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-3 sm:p-4">
       <Card className="w-full max-w-md shadow-lg">
-        <div className="p-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-center text-gray-900">
+        <div className="p-4 sm:p-6 md:p-8">
+          <div className="mb-6 md:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-center text-gray-900">
               Turar joy
             </h1>
-            <p className="text-center text-gray-600 mt-2">Boshqaruv tizimi</p>
+            <p className="text-center text-sm sm:text-base text-gray-600 mt-1 md:mt-2">
+              Boshqaruv tizimi
+            </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 md:mb-2">
                 Foydalanuvchi nomi
               </label>
               <Input
@@ -56,11 +58,12 @@ export default function LoginPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 disabled={loading}
+                className="text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 md:mb-2">
                 Parol
               </label>
               <Input
@@ -69,27 +72,32 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
+                className="text-sm"
               />
             </div>
 
             <Button
               type="submit"
-              className="w-full"
+              className="w-full text-sm sm:text-base"
               disabled={loading || !username || !password}
             >
               {loading ? "Yuklanmoqda..." : "Kirish"}
             </Button>
           </form>
 
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+          <div className="mt-4 md:mt-6 p-2 sm:p-3 md:p-4 bg-blue-50 rounded-lg border border-blue-200">
             <p className="text-xs text-gray-600 text-center">
               <strong>Test hisobi:</strong>
               <br />
               Foydalanuvchi:{" "}
-              <code className="bg-white px-2 py-1 rounded">adminadmin</code>
+              <code className="bg-white px-1 sm:px-2 py-1 rounded text-xs">
+                adminadmin
+              </code>
               <br />
               Parol:{" "}
-              <code className="bg-white px-2 py-1 rounded">adminadmin</code>
+              <code className="bg-white px-1 sm:px-2 py-1 rounded text-xs">
+                adminadmin
+              </code>
             </p>
           </div>
         </div>

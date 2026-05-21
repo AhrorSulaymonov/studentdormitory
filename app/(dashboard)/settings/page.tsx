@@ -112,24 +112,24 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
           Sozlamalar
         </h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
+        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1 md:mt-2">
           Dastur sozlamalarini o'zgartirish
         </p>
       </div>
 
       {/* General Settings */}
-      <Card className="p-6">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+      <Card className="p-3 md:p-6">
+        <h2 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-3 md:mb-4">
           Umumiy sozlamalar
         </h2>
-        <div className="space-y-4">
+        <div className="space-y-3 md:space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 md:mb-2">
               Turar joy nomi
             </label>
             <Input
@@ -138,11 +138,12 @@ export default function SettingsPage() {
                 setSettingsState({ ...settings, dormName: e.target.value })
               }
               placeholder="Turar joy nomi"
+              className="text-sm"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 md:mb-2">
               Standart oylik narxi
             </label>
             <Input
@@ -155,11 +156,12 @@ export default function SettingsPage() {
                 })
               }
               placeholder="500000"
+              className="text-sm"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 md:mb-2">
               To'lov muddati (kuni)
             </label>
             <Input
@@ -174,11 +176,12 @@ export default function SettingsPage() {
               placeholder="10"
               min="1"
               max="31"
+              className="text-sm"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 md:mb-2">
               Valyuta
             </label>
             <Input
@@ -187,33 +190,42 @@ export default function SettingsPage() {
                 setSettingsState({ ...settings, currency: e.target.value })
               }
               placeholder="UZS"
+              className="text-sm"
             />
           </div>
 
-          <Button onClick={handleSave} disabled={saving}>
+          <Button
+            onClick={handleSave}
+            disabled={saving}
+            className="w-full md:w-auto text-sm"
+          >
             {saving ? "Saqlanmoqda..." : "Saqlash"}
           </Button>
         </div>
       </Card>
 
       {/* Data Management */}
-      <Card className="p-6">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+      <Card className="p-3 md:p-6">
+        <h2 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-3 md:mb-4">
           Ma'lumotlarni boshqarish
         </h2>
-        <div className="space-y-3">
+        <div className="space-y-2 md:space-y-3">
           <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+            <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mb-2">
               Barcha ma'lumotlarni JSON faylga eksport qilish
             </p>
-            <Button onClick={handleExport} variant="outline" className="gap-2">
+            <Button
+              onClick={handleExport}
+              variant="outline"
+              className="gap-2 w-full md:w-auto text-xs md:text-sm"
+            >
               <Download className="w-4 h-4" />
               Eksport qilish
             </Button>
           </div>
 
-          <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+          <div className="pt-2 md:pt-3 border-t border-gray-200 dark:border-gray-700">
+            <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mb-2">
               JSON fayldan ma'lumotlarni import qilish
             </p>
             <label>
@@ -226,7 +238,7 @@ export default function SettingsPage() {
               <Button
                 asChild
                 variant="outline"
-                className="gap-2 cursor-pointer"
+                className="gap-2 w-full md:w-auto cursor-pointer text-xs md:text-sm"
               >
                 <span>
                   <Upload className="w-4 h-4" />
@@ -236,8 +248,8 @@ export default function SettingsPage() {
             </label>
           </div>
 
-          <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+          <div className="pt-2 md:pt-3 border-t border-gray-200 dark:border-gray-700">
+            <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mb-2">
               Barcha ma'lumotlarni o'chirish va qayta tiklash
             </p>
             <AlertDialog
@@ -246,26 +258,28 @@ export default function SettingsPage() {
             >
               <Button
                 variant="destructive"
-                className="gap-2"
+                className="gap-2 w-full md:w-auto text-xs md:text-sm"
                 onClick={() => setResetDialogOpen(true)}
               >
                 <Trash2 className="w-4 h-4" />
                 Qayta tiklash
               </Button>
-              <AlertDialogContent>
+              <AlertDialogContent className="w-full max-w-md">
                 <AlertDialogTitle>
                   Barcha ma'lumotlarni qayta tiklash
                 </AlertDialogTitle>
-                <AlertDialogDescription>
+                <AlertDialogDescription className="text-xs md:text-sm">
                   Siz barcha ma'lumotlarni o'chirib tashlamoqchisiz? Bu amalni
                   qaytarib bo'lmaydi. Iloji bo'lgan taqdirda avval eksport
                   qiling.
                 </AlertDialogDescription>
-                <div className="flex gap-2 justify-end">
-                  <AlertDialogCancel>Bekor qilish</AlertDialogCancel>
+                <div className="flex gap-2 justify-end flex-wrap">
+                  <AlertDialogCancel className="text-xs md:text-sm">
+                    Bekor qilish
+                  </AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleReset}
-                    className="bg-red-600 hover:bg-red-700"
+                    className="bg-red-600 hover:bg-red-700 text-xs md:text-sm"
                   >
                     Rostdan ham qayta tiklash
                   </AlertDialogAction>
@@ -277,11 +291,11 @@ export default function SettingsPage() {
       </Card>
 
       {/* Info */}
-      <Card className="p-6 bg-blue-50 dark:bg-blue-900">
-        <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
-          Malumatlar
+      <Card className="p-3 md:p-6 bg-blue-50 dark:bg-blue-900">
+        <h3 className="text-base md:text-lg font-semibold text-blue-900 dark:text-blue-100 mb-2">
+          Ma'lumatlar
         </h3>
-        <ul className="text-sm text-blue-800 dark:text-blue-100 space-y-1">
+        <ul className="text-xs md:text-sm text-blue-800 dark:text-blue-100 space-y-1">
           <li>• Barcha ma'lumotlar brauzer localStorage'da saqlanadi</li>
           <li>• Ma'lumotlar faqat shu brauzerda mavjud bo'ladi</li>
           <li>
